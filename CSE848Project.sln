@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GANLibrary", "CSE848Project\GANLibrary.csproj", "{855C84CD-EC2B-4C65-B6F1-B5D37E916A94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GANConsole", "GANConsole\GANConsole.csproj", "{7DC55676-AA33-4277-A1CB-516451A3127D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{855C84CD-EC2B-4C65-B6F1-B5D37E916A94} = {855C84CD-EC2B-4C65-B6F1-B5D37E916A94}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{855C84CD-EC2B-4C65-B6F1-B5D37E916A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{855C84CD-EC2B-4C65-B6F1-B5D37E916A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{855C84CD-EC2B-4C65-B6F1-B5D37E916A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{855C84CD-EC2B-4C65-B6F1-B5D37E916A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC55676-AA33-4277-A1CB-516451A3127D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC55676-AA33-4277-A1CB-516451A3127D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC55676-AA33-4277-A1CB-516451A3127D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC55676-AA33-4277-A1CB-516451A3127D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D85E6951-B3AA-4DA6-8253-63F30CB6FBD9}
+	EndGlobalSection
+EndGlobal
