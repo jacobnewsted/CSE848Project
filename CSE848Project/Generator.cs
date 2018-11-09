@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TensorFlow;
 
 namespace GANLibrary
 {
@@ -8,65 +9,37 @@ namespace GANLibrary
     {
         int TargetWidth = 0;
         int TargetHeight = 0;
-        List<string[]> realImages = new List<string[]>();
-        double fakeProb = 0.5;
-        Random rand = new Random();
+
+        Dictionary<string, TFOutput> Outputs = new Dictionary<string, TFOutput>();
 
         private Generator() { }
-        public Generator(int targetWidth, int targetHeight)
+        public Generator(int targetWidth, int targetHeight, TFGraph TFGraph)
         {
             TargetWidth = targetWidth;
             TargetHeight = targetHeight;
+
+            TFOutput Z = TFGraph.PlaceholderV2(TFDataType.Float, new TFShape(new long[] { 100 }), "Z");
+
+            TFOutput G_W1 = TFGraph.Variable(TFGraph.RandomUniform(new TFShape(new long[2] { 100, 128 })));
+            TFOutput G_b1 = TFGraph.Variable(TFGraph.Zeros(new TFShape(new long[1] { 128 })));
+
+            TFOutput G_W2 = TFGraph.Variable(TFGraph.RandomUniform(new TFShape(new long[2] { 128, TargetWidth * TargetHeight })));
+            TFOutput G_b2 = TFGraph.Variable(TFGraph.Zeros(new TFShape(new long[1] { TargetWidth * TargetHeight })));
+
+            Outputs.Add("Z", Z);
+            Outputs.Add("G_W1", G_W1);
+            Outputs.Add("G_W2", G_W2);
+            Outputs.Add("G_b1", G_b1);
+            Outputs.Add("G_b2", G_b2);
         }
 
-        public void AddAllReal(string[][] realImage)
+        public TFOutput GenerateProb(TFGraph TFGraph, TFOutput z)
         {
-            foreach (string[] image in realImage)
-            {
-                realImages.Add(image);
-            }
-        }
-
-        public void AddReal(string[] realImage)
-        {
-            realImages.Add(realImage);
-        }
-
-        public string[] GenerateImage()
-        {
-            if (rand.NextDouble() > fakeProb)
-                return realImages[rand.Next(realImages.Count)];
-            else
-            {
-                string[] toMutate = realImages[rand.Next(realImages.Count)];
-                string[] toReturn = new string[toMutate.Length];
-
-                int[,] imageVector = Utilities.StringsToVector(toMutate);
-                int size = toMutate.GetLength(1);
-                int[] noiseVector = GenerateNoiseVector(size);
-
-                for (int i = 0; i < imageVector.GetLength(0); i++)
-                {
-                    for (int j = 0; j < imageVector.GetLength(1); j++)
-                    {
-                        imageVector[i, j] = imageVector[i, j] % noiseVector[j];
-                    }
-                }
-
-                toReturn = Utilities.VectorToStrings(imageVector);
-
-                return toReturn;
-            }
-        }
-
-        private int[] GenerateNoiseVector(int size)
-        {
-            int[] noiseVector = new int[size];
-            for (int i = 0; i < noiseVector.Length; i++)
-            {
-                noiseVector[i] = rand.Next(5);
-            }
-            return noiseVector;
+            
+            TFOutput G_h1 = TFGraph.Relu(TFGraph.Add(TFGraph.MatMul(z, Outputs["G_W1"]), Outputs["G_b1"]));
+            TFOutput G_log_prob = TFGraph.Add(TFGraph.MatMul(G_h1, Outputs["G_W2"]), Outputs["G_b2"]);
+            TFOutput G_prob = TFGraph.Sigmoid(G_log_prob);
+            return G_prob;
         }
     }
 }
